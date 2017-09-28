@@ -23,7 +23,7 @@ CPP_SOURCES=      \
   multi_lock.cc
 
 
-LIBNAME=libmdbm.so
+LIBNAME=libmdbm.$(SHLIB_EXT)
 LIBVER=4
 ifeq ($(UNAME), Darwin)
 SONAME=-Wl,-install_name,$(LIBNAME).$(LIBVER)
