@@ -9,7 +9,7 @@ CPP_SOURCES=      \
   com_yahoo_db_mdbm_internal_NativeMdbmAccess.cc
 
 
-LIBNAME=libmdbm_java.so
+LIBNAME=libmdbm_java.$(SHLIB_EXT)
 LIBVER=4
 SONAME=-Wl,-soname,$(LIBNAME).$(LIBVER)
 #-Wl,-rpath,$(DEFAULT_LIB_INSTALL_PATH)

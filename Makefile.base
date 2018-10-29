@@ -22,6 +22,13 @@ COMP_FLAGS += -DALLOW_MLOCK_RESET
 # Overrides PARTITION_LOCK_CPU_MULTIPLIER
 #COMP_FLAGS += -DPARTITION_LOCK_COUNT=128
 
+ifeq ($(OS),Windows_NT)
+SHLIB_EXT := dll
+else ifeq ($(UNAME),Darwin)
+SHLIB_EXT := dylib
+else
+SHLIB_EXT := so
+endif
 
 ifeq ($(UNAME), Linux)
 # NOTE: we need to check RHEL6 or greater for robust-pthreads
@@ -135,6 +142,17 @@ endif
 LOCAL_LDADD = -L$(TOPDIR)/src/lib/$(OBJDIR)
 COMP_FLAGS +=  -g -O2 -I/usr/include -I$(INCDIR) -I$(TOPDIR)/include -I. -Wall -fPIC
 
+# OpenSSL is installed by default on macOS, but the headers are not.
+# Thus here we'll check for an installation of OpenSSL with Homebrew,
+# an unofficial but widely used package manager for macOS.
+ifeq ($(UNAME),Darwin)
+ifneq (,$(shell command -v brew))
+ifneq (,$(shell brew ls --versions openssl))
+COMP_FLAGS += -I$(shell brew --prefix openssl)/include
+endif # OpenSSL installed via Homebrew
+endif # Homebrew installed
+endif # Darwin
+
 # get gcc version (space-separated components)
 GCC_VER_SPC=$(shell gcc -dumpversion | tr '.' ' ')
 # turn it into an integer, zero-padding minor and patch versions to 4 digits
@@ -174,7 +192,7 @@ endif
 CFLAGS += $(COMP_FLAGS)
 CXXFLAGS += $(COMP_FLAGS)
 
-ifeq ($(CC),clang)
+ifneq (,$(shell $(CC) --version | grep clang))
   # allow for empty macro args, etc. under clang compiler
   CFLAGS += -std=gnu99
   CXXFLAGS += -std=c++11
@@ -194,7 +212,7 @@ $(OBJDIR)/%.o: %.cc
 #	$(CC) $(CFLAGS) $(PEDANTIC) -c $< -o $@
 
 # TODO ensure we have all gcov generated files
-CLEAN_OBJECTS=*.o *.d *.lib *.so.* *.xml *.gcov *.gcda
+CLEAN_OBJECTS:=*.o *.d *.lib *.$(SHLIB_EXT).* *.xml *.gcov *.gcda
 CLEAN_OB_DIRS=. $(OBJDIR_BASE) $(OBJDIR_PROF)
 .PHONY: clean-objs
 clean-objs:

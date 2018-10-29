@@ -1882,7 +1882,7 @@ ProcessInputOption(const string &inputFile, bool outputToFile)
 int main(int argc, char** argv)
 {
     char pwdbuf[MAXPATHLEN];
-    if (getcwd(pwdbuf, MAXPATHLEN) > 0) {
+    if (getcwd(pwdbuf, MAXPATHLEN)) {
         PwdStr = pwdbuf;
     }
 
