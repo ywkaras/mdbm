@@ -9006,7 +9006,7 @@ mdbm_validate_r(MDBM* db, MDBM_ITER* iter)
             } else if (v.dsize != val.dsize || memcmp(v.dptr,val.dptr,v.dsize)) {
                 datum k = key;
                 if (mdbm_store_r(db,&k,&v,MDBM_REPLACE|MDBM_CLEAN|MDBM_CACHE_ONLY,iter) < 0
-                    && errno != ENOMEM && errno != EINVAL))
+                    && errno != ENOMEM && errno != EINVAL)
                 {
                     mdbm_logerror(LOG_ERR,0,"mdbm backing store cache refill error");
                     ret = -1;
