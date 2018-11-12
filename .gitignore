@@ -22,6 +22,8 @@ gendoc/man
 *.swp
 *.swo
 
+.vscode
+
 GPATH
 GRTAGS
 GTAGS
