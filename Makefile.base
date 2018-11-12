@@ -142,13 +142,14 @@ endif
 LOCAL_LDADD = -L$(TOPDIR)/src/lib/$(OBJDIR)
 COMP_FLAGS +=  -g -O2 -I/usr/include -I$(INCDIR) -I$(TOPDIR)/include -I. -Wall -fPIC
 
-# OpenSSL is installed by default on macOS, but the headers are not.
+# OpenSSL is installed by default on macOS, but the library and headers are not.
 # Thus here we'll check for an installation of OpenSSL with Homebrew,
 # an unofficial but widely used package manager for macOS.
 ifeq ($(UNAME),Darwin)
 ifneq (,$(shell command -v brew))
 ifneq (,$(shell brew ls --versions openssl))
 COMP_FLAGS += -I$(shell brew --prefix openssl)/include
+LDADD += -L$(shell brew --prefix openssl)/lib
 endif # OpenSSL installed via Homebrew
 endif # Homebrew installed
 endif # Darwin
