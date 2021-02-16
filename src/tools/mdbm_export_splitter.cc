@@ -90,8 +90,7 @@ getNumForHashCode(const char *optarg)
                           string("STL"),      string("MD5"),   string("SHA1"), 
                           string("JENKINS"),  string("HSIEH"), string() };
 
-    char (*pfunc)(char) = reinterpret_cast<char(*)(char)>(static_cast<int(*)(int)>(toupper));
-    transform(str.begin(), str.end(), str.begin(), pfunc);
+    transform(str.begin(), str.end(), str.begin(), [](char c) -> char { return toupper(c); });
     for (int hcode = smallestHashCode; nameList[hcode].empty() == false; ++hcode)
     {
         if (str.find(nameList[hcode]) != string::npos)
